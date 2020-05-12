@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace: 作用
+  1：隔离sql
+  2：使用mappper动态开发时，namespace必须和接口类的全路径名一致
+ -->
+<mapper namespace="hzwxdf.com.dao.Student3Mapper">
+	
+	<!--
+	  <selectKey keyColumn="s_id" keyProperty="s_id" order="BEFORE" resultType="Integer">
+	  SELECT LAST_INSERT_ID()
+	  </selectKey>
+	  -->
+	<insert id="insertStudent" parameterType="hzwxdf.com.domain.Student">
+	  insert into student
+	  (s_id, s_name, s_sex, s_birthday, s_banji, s_age)
+	  value
+	  (#{s_id},#{s_name},#{s_sex},#{s_birthday},#{s_banji},#{s_age})
+	</insert>
+
+	<delete id="deleteStudent" parameterType="String">
+	  delete from student where s_id = #{s_id}
+	</delete>
+	
+	<update id="updateStudent" parameterType="hzwxdf.com.domain.Student" >
+	  update student set
+	  s_id = #{s_id}, s_name = #{s_name}, s_sex =#{s_sex}, s_birthday =#{s_birthday},s_banji=#{s_banji},s_age=#{s_age}
+	  where s_id = #{s_id}
+	</update>
+	
+	<select id="findByColumn" parameterType="HashMap" resultType="hzwxdf.com.domain.Student">
+		select * from student
+		<where>
+		  <if test="column != null and cvalue != null ">
+		    ${column} = #{cvalue}
+		  </if>
+		</where>
+	</select>
+	
+	<!-- hzwxdf.com.domain.Student 可以使用在mybatis-config.xml中配置的别名来方便书写 -->
+	<select id="findByName" parameterType="String" resultType="student">
+	  select * from student where s_name like '${name}%'
+	</select>
+	
+	
+
+</mapper>

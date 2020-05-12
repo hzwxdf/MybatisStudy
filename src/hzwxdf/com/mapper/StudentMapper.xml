@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hzwxdf.com.dao.StudentDao">
+	<!-- 基本CRUD查询 -->
+	<select id="findAll" resultType="hzwxdf.com.domain.Student">
+		select * from student;
+	</select>
+	
+	<select id="selectStudentById" 
+			parameterType="String"
+			resultType="hzwxdf.com.domain.Student">
+		select * from student where s_id = #{s_id} 
+	</select>
+	
+	<insert id="insertStudent" parameterType="hzwxdf.com.domain.Student">
+		insert into student
+		(s_id, s_name, s_sex, s_birthday, s_banji, s_age)
+		value
+		(#{s_id}, #{s_name}, #{s_sex}, #{s_birthday}, #{s_banji}, #{s_age})
+	</insert>
+	
+	<update id="updateStudent" parameterType="hzwxdf.com.domain.Student" >
+		update student set s_name = #{s_name} where s_id = #{s_id}
+	</update>
+	
+	<delete id="deleteStudent" parameterType="String">
+		delete from student where s_id = #{s_id}
+	</delete>
+	
+	<!-- 动态sql语句 -->
+	<!-- if  -->
+	<select id="findByName"
+	  parameterType="string"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student where
+	  <if test=" name != null ">
+	    s_name = #{name}
+	  </if>
+	</select>
+	<!-- where-if -->
+	<select id="findByName2"
+	  parameterType="string"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student
+	  <where>
+	    <if test=" name == null ">
+	      s_id = '2015001'
+	    </if>
+	    <if test=" name != null ">
+	      s_name = #{name}
+	    </if>
+	  </where>
+	</select>
+	<!-- choose-when-otherwise -->
+	<select id="findByName22"
+	  parameterType="string"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student
+	  <where>
+	    <choose>
+	      <when test=" name ==null ">
+	        s_id = '2015001'
+	      </when>
+	      <otherwise>
+	        s_name = #{name}
+	      </otherwise>
+	    </choose>
+	  </where>
+	</select>
+	
+	<select id="findByName3"
+	  parameterType="string"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student where s_name like '${name}%'
+	</select>
+	
+	<select id="findByName4"
+	  parameterType="String"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student where s_id like '${id}%'
+	  <!--  也可以使用#{}
+	  select * from student where s_id like '${id}'"%" 
+	  sql=>  select * from student where s_id like '2015'"%"
+	  上面sql可以执行
+	  -->
+	</select>
+	
+	<!-- 学习foreach语法 
+	  参数是单一参数时
+	      参数如果是list，那么Collection是list
+	      参数如果是array，那么Collection是array
+	 参数是多个参数时，使用map来处理(list\array也是使用map处理的)
+	-->
+	<select id="findByName5"
+	  parameterType="String"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student where s_id in
+	    <foreach collection="array" item="item" index="idx" open="(" close=")" separator=",">
+	      #{item}
+	    </foreach>
+	</select>
+	<select id="findByName6"
+	  parameterType="String"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student where s_id in
+	    <foreach collection="list" item="item" index="idx" open="(" close=")" separator=",">
+	      #{item}
+	    </foreach>
+	</select>
+	<select id="findByName7"
+	  parameterType="String"
+	  resultType="hzwxdf.com.domain.Student">
+	  select * from student where s_name like '${name}%' and s_id in
+	    <foreach collection="ids" item="item" index="idx" open="(" close=")" separator=",">
+	      #{item}
+	    </foreach>
+	</select>
+	
+	<insert id="insertStudentGetID" parameterType="hzwxdf.com.domain.Student">
+	  <!-- 增加selectKey，可以获取自增主键
+	  keyColumn ：数据库的主键字段
+	  keyProperty ：javabean对象的主键对应属性
+	  order ： 在执行插入前还是插入后获取id
+	   -->
+	  <selectKey keyColumn="s_id" keyProperty="s_id" order="BEFORE" resultType="Integer">
+	    SELECT LAST_INSERT_ID()
+	  </selectKey>
+	    insert into student
+		(s_id, s_name, s_sex, s_birthday, s_banji, s_age)
+		value
+		(#{s_id}, #{s_name}, #{s_sex}, #{s_birthday}, #{s_banji}, #{s_age})
+	</insert>
+	
+</mapper>

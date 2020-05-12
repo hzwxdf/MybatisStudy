@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Studnet2Dao">
+	
+	<!--
+	  <selectKey keyColumn="s_id" keyProperty="s_id" order="BEFORE" resultType="Integer">
+	  SELECT LAST_INSERT_ID()
+	  </selectKey>
+	  -->
+	<insert id="insertStudent" parameterType="hzwxdf.com.domain.Student">
+	  insert into student
+	  (s_id, s_name, s_sex, s_birthday, s_banji, s_age)
+	  value
+	  (#{s_id},#{s_name},#{s_sex},#{s_birthday},#{s_banji},#{s_age})
+	</insert>
+
+	<delete id="deleteStudent" parameterType="String">
+	  delete from student where s_id = #{s_id}
+	</delete>
+	
+	<update id="updateStudent" parameterType="hzwxdf.com.domain.Student" >
+	  update student set
+	  s_id = #{s_id}, s_name = #{s_name}, s_sex =#{s_sex}, s_birthday =#{s_birthday},s_banji=#{s_banji},s_age=#{s_age}
+	  where s_id = #{s_id}
+	</update>
+	
+	<select id="findByColumn" parameterType="HashMap" resultType="hzwxdf.com.domain.Student">
+		select * from student
+		<where>
+		  <if test="column != null and value != null ">
+		    ${column} = #{value}
+		  </if>
+		</where>
+	</select>
+	
+	<select id="findByName" parameterType="String" resultType="hzwxdf.com.domain.Student">
+	  select * from student where s_name like '${name}%'
+	</select>
+	
+	
+
+</mapper>

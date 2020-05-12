@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 注意：配置文件的设置顺序不能乱 -->
+
+	<!-- 通过properties文件来保存数据库相关信息，方便修改 -->
+	<properties resource="db.properties">
+		<!-- 
+		指定resource时会自动关联对应属性，也可以在properties中通过property来指定属性，
+		如果外部文件有属性，外部会覆盖内部的属性 
+		在dataSource中使用${jdbc.driver}来获取对应值
+		-->
+		<property name="jdbc.username" value="name"/>
+	</properties>
+	
+	<settings>
+		<setting name="logImpl" value="LOG4J"/>
+	</settings>
+	
+	<!-- 通过别名来简化书写 -->
+	<typeAliases>
+		<!-- 配置单个别名，可以通过typeAiases -->
+		<typeAlias type="hzwxdf.com.domain.Student" alias="student"/>
+		<!-- 可以配置某个包下面所有类的别名，大小写不敏感 -->
+		<package name="hzwxdf.com.domain"/>
+	</typeAliases>
+	
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<!-- 
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://localhost:3306/school?characterEocoding=UTF-8" />
+				<property name="username" value="root" />
+				<property name="password" value="123" />
+				 -->
+				 <property name="driver" value="${jdbc.driver}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- 
+	映射器配置
+	<mapper resource=" " />
+		使用相对于类路径的资源（现在的使用方式）
+		如：<mapper resource="sqlmap/User.xml" />
+	
+	<mapper class=" " />
+		使用mapper接口类路径
+		如：<mapper class="cn.itcast.mybatis.mapper.UserMapper"/>
+		注意：此种方法要求mapper接口名称和mapper映射文件名称相同，且放在同一个目录中。
+    <package name=""/>
+		注册指定包下的所有mapper接口
+		如：<package name="cn.itcast.mybatis.mapper"/>
+		注意：此种方法要求mapper接口名称和mapper映射文件名称相同，且放在同一个目录中。
+	 -->
+	
+	<mappers>
+		<mapper resource="hzwxdf/com/mapper/StudentMapper.xml" />
+		<mapper resource="hzwxdf/com/daoImp/Student2Dao.xml"/>
+		<mapper resource="hzwxdf/com/mapper/Student3Mapper.xml" />
+	</mappers>
+	
+</configuration>
